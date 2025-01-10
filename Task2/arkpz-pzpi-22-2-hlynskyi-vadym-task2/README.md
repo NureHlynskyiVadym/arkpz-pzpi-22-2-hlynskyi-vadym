@@ -1,7 +1,10 @@
 # LevelUp
 
 ## Overview
-This is README file that describes API configuration, endpoints and how to interact with them.
+This is README file that describes API configuration, controllers, endpoints and how to interact with them.
+
+## Groups Controller
+
 ## Base URL
 ```
 /api/groups
