@@ -3,7 +3,7 @@
 ## Overview
 This is README file that describes API configuration, controllers, endpoints and how to interact with them.
 
-## Groups Controller
+# Groups Controller
 
 ## Base URL
 ```
