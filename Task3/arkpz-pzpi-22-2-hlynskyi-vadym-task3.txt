@@ -1,0 +1,273 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+
+Кафедра «Програмної інженерії»
+
+
+
+ЗВІТ
+З лабораторної роботи № 3
+з дисципліни
+«Аналіз та рефакторинг коду»
+
+
+
+Виконав
+ст. гр. ПЗПІ-22-2
+Глинський Вадим	Перевірив
+ст. викладач каф. ПІ
+Сокорчук І. П.
+
+
+
+
+
+
+
+
+
+
+
+
+
+Харків 2024
+1 Мета роботи:
+
+Розробити бізнес-логику та функції адміністрування серверної частини програмної системи для гейміфікації робочого процесу LevelUp.
+
+2 Хід роботи:
+
+2.1 Розробити бізнес логіку серверної частини програмної системи.
+
+Проєкт LevelUp спрямований на створення та управління цілями користувачів, що пов’язані з їхнім професійним розвитком та ефективністю у робочому процесі. Основними елементами бізнес-логіки є формування, оновлення та відстеження цілей користувачів, а також забезпечення взаємодії між учасниками команд і наставниками.
+Бізнес-логіка проєкту LevelUp включає ефективне управління даними користувачів, цілей та інтерактивною взаємодією всередині команд. Процеси створення, оновлення та затвердження цілей базуються на індивідуальних планах розвитку, що сприяє підвищенню професійних навичок, мотивації та продуктивності працівників.
+
+2.2 Розробити функції адміністрування серверної частини програмної системи.
+
+Для адміністратора були розроблені такі функції адміністрування як: видалення юзера, зміна його ролі, перегляд інформації про юзерів. Також адміністратор зможе оновлювати, видаляти задачі та групи. Було створено дві UML діаграми які зображені на рисунка 2.1 – 2.2.
+ 
+ 
+Рисунок 2.1 – UML діаграма діяльності для серверної частини
+ 
+Рисунок 2.2 –  UML діаграма взаємодії для серверної частини.
+2.3 Створення програмної реалізації бізнес логіки та функцій адміністрування серверної частини.
+
+Було створено програмну реалізацію описаних вище функцій адміністрування та бізнес логіки, код контролерів винесено в додаток А. (рисунки 2.3 – 2.4).
+  
+ 
+Рисунок 2.3 – Програмна реалізація для бізнес логіки API
+ 
+Рисунок 2.4 – Програмна реалізація для адміністрування API
+
+3 Висновки:
+
+У результаті виконання лабораторної роботи була розроблена бізнес-логіка та функції адміністрування серверної частини програмної системи LevelUp. У результаті було забезпечено функціонування основних бізнес-процесів, що дозволяють ефективно контролювати хід роботи в компанії та ефективне заохочення співробітників.
+
+
+
+ДОДАТОК А
+
+Код адмін контролера та бізнес логіки
+
+1. using LevelUp.Interfaces;
+2. using LevelUp.Models;
+3. using Microsoft.AspNetCore.Authorization;
+4. using Microsoft.AspNetCore.Mvc;
+5. 
+6. namespace LevelUp.Controllers
+7. {
+8.     [ApiController]
+9.     [Route("api/[controller]")]
+10.     public class AdminController : ControllerBase
+11.     {
+12.         private readonly IUserRepository _userRepository;
+13.         private readonly IGroupRepository _groupRepository;
+14.         private readonly ITaskRepository _taskRepository;
+15. 
+16.         public AdminController(IUserRepository userRepository, IGroupRepository groupRepository, ITaskRepository taskRepository)
+17.         {
+18.             _userRepository = userRepository;
+19.             _groupRepository = groupRepository;
+20.             _taskRepository = taskRepository;
+21.         }
+22. 
+23.         
+24. 
+25.         [HttpPut("users/{id}/role")]
+26.         public IActionResult UpdateUserRole(int id)
+27.         {
+28. 
+29.             var user = _userRepository.GetUserById(id);
+30.             if (user == null)
+31.                 return NotFound(new { success = false, message = $"User with ID {id} not found." });
+32. 
+33.             user.Admin = !user.Admin;
+34.             if (!_userRepository.UpdateUser(user))
+35.                 return StatusCode(500, new { success = false, message = "Error updating user role." });
+36. 
+37.             return Ok(new { success = true, data = user.Admin });
+38.         }
+39. 
+40.         [HttpDelete("users/{id}")]
+41.         public IActionResult DeleteUser(int id)
+42.         {
+43. 
+44.             if (!_userRepository.DeleteUser(id))
+45.                 return NotFound(new { success = false, message = $"User with ID {id} not found." });
+46. 
+47.             return Ok(new { success = true });
+48.         }
+49. 
+50.         [HttpGet("users")]
+51.         public IActionResult GetAllUsers()
+52.         {
+53. 
+54.             var users = _userRepository.GetUsers();
+55.             return Ok(new { success = true, data = users });
+56.         }
+57. 
+58.         [HttpDelete("groups/{id}")]
+59.         public IActionResult DeleteGroup(int id)
+60.         {
+61. 
+62.             if (!_groupRepository.DeleteGroup(id))
+63.                 return NotFound(new { success = false, message = $"Group with ID {id} not found." });
+64. 
+65.             return Ok(new { success = true });
+66.         }
+67. 
+68.         [HttpGet("statistics/users")]
+69.         public IActionResult GetUserStatistics()
+70.         {
+71. 
+72.             var users = _userRepository.GetUsers();
+73.             var statistics = new
+74.             {
+75.                 TotalUsers = users.Count,
+76.                 Admins = users.Count(u => u.Admin == true)
+77.             };
+78. 
+79.             return Ok(new { success = true, data = statistics });
+80.         }
+81. 
+82.         [HttpDelete("goals/{id}")]
+83.         public IActionResult DeleteTask(int id)
+84.         {
+85. 
+86.             if (!_taskRepository.DeleteTask(id))
+87.                 return NotFound(new { success = false, message = $"Goal with ID {id} not found." });
+88. 
+89.             return Ok(new { success = true });
+90.         }
+91.     }
+92. }
+
+1. using LevelUp.Interfaces;
+2. using Microsoft.AspNetCore.Mvc;
+3. 
+4. namespace LevelUp.Controllers
+5. {
+6.     public class LevelController : ControllerBase
+7.     {
+8.         private readonly IUserRepository _userRepository;
+9.         public LevelController(IUserRepository userRepository)
+10.         {
+11.             _userRepository = userRepository;
+12.         }
+13. 
+14. 
+15. 
+16.         //Формула для розрахунку кількосту хр для наступного рівня
+17.         public int CalculateXpForNextLevel(int currentLevel, int baseXp = 100, double growthFactor = 1.2, int progressBonus = 20)
+18.         {
+19.             if (currentLevel <= 0)
+20.                 throw new ArgumentException("Level must be greater than 0.");
+21. 
+22.             double xpForNextLevel = baseXp * Math.Pow(currentLevel, growthFactor)
+23.                                   + (progressBonus * currentLevel * Math.Log(currentLevel + 1));
+24. 
+25.             return (int)Math.Ceiling(xpForNextLevel);
+26.         }
+27. 
+28.         [HttpPost("level-up/{userId}")]
+29.         public async Task<IActionResult> LevelUp(int userId)
+30.         {
+31.             var user = _userRepository.GetUserById(userId);
+32. 
+33.             if (user == null)
+34.                 return NotFound("User not found.");
+35. 
+36.             if (user.XP >= user.XPToNextLevel)
+37.             {
+38.                 user.XP -= user.XPToNextLevel;
+39. 
+40.                 user.Level++;
+41. 
+42.                 user.XPToNextLevel = CalculateXpForNextLevel(user.Level);
+43. 
+44.                 _userRepository.UpdateUser(user);
+45. 
+46.                 return Ok(new
+47.                 {
+48.                     Message = "Level up successful!",
+49.                     NewLevel = user.Level,
+50.                     RemainingXP = user.XP,
+51.                     XPToNextLevel = user.XPToNextLevel
+52.                 });
+53.             }
+54. 
+55.             return BadRequest(new
+56.             {
+57.                 Message = "Not enough XP to level up.",
+58.                 CurrentXP = user.XP,
+59.                 XPToNextLevel = user.XPToNextLevel
+60.             });
+61.         }
+62.     }
+63. }
+64.         [HttpPost("{rewardId}/claim")]
+65.         public IActionResult ClaimReward(int rewardId, [FromBody] int userId)
+66.         {
+67.             var reward = _rewardRepository.GetRewardById(rewardId);
+68.             if (reward == null)
+69.                 return NotFound(new { success = false, message = $"Reward with ID {rewardId} not found." });
+70. 
+71.             var user = _userRepository.GetUserById(userId);
+72.             if (user == null)
+73.                 return NotFound(new { success = false, message = $"User with ID {userId} not found." });
+74. 
+75.             if (user.Points < reward.Price)
+76.                 return BadRequest(new { success = false, message = "Not enough points to claim this reward." });
+77. 
+78.             user.Points -= reward.Price;
+79.             if (!_userRepository.UpdateUser(user))
+80.                 return StatusCode(500, new { success = false, message = "Error updating user points." });
+81. 
+82.             var isClaimed = _rewardRepository.ClaimReward(userId, rewardId);
+83.             if (!isClaimed)
+84.                 return StatusCode(500, new { success = false, message = "Reward could not be claimed, either it was already claimed or an error occurred." });
+85. 
+86.             return Ok(new { success = true, message = "Reward successfully claimed!", data = new { user.Points, reward.Price } });
+87.         }
+88.         [HttpPost("{taskId}/complete")]
+89.         public IActionResult CompleteTask(int taskId, [FromBody] int userId)
+90.         {
+91.             var task = _taskRepository.GetTaskById(taskId);
+92.             if (task == null)
+93.                 return NotFound(new { success = false, message = $"Task with ID {taskId} not found." });
+94. 
+95.             var user = _userRepository.GetUserById(userId);
+96.             if (user == null)
+97.                 return NotFound(new { success = false, message = $"User with ID {userId} not found." });
+98. 
+99.             var taskCompleted = _taskRepository.CompleteTask(taskId, userId);
+100.             if (!taskCompleted)
+101.                 return StatusCode(500, new { success = false, message = "Error completing the task." });
+102. 
+103.             user.XP += task.Points;
+104.             user.Points += task.Points;
+105.             if (!_userRepository.UpdateUser(user))
+106.                 return StatusCode(500, new { success = false, message = "Error updating user XP." });
+107. 
+108.             return Ok(new { success = true, message = "Task marked as completed and XP updated.", data = new { user.XP, task.Points } });
+109.         }
