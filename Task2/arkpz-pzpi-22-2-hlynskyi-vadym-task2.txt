@@ -1,0 +1,356 @@
+МІНІСТЕРСТВО ОСВІТИ І НАУКИ УКРАЇНИ
+ХАРКІВСЬКИЙ НАЦІОНАЛЬНИЙ УНІВЕРСИТЕТ РАДІОЕЛЕКТРОНІКИ
+Кафедра «Програмної інженерії»
+ЗВІТ
+З лабораторної роботи № 2
+з дисципліни
+«Аналіз та рефакторинг коду»
+Виконав
+ст. гр. ПЗПІ-22-2
+Глинський Вадим
+Перевірив
+ст. викладач каф. ПІ
+Сокорчук І. П.
+Харків 2024
+1 Мета роботи:
+Розробити серверну частину для програми LevelUp, що дозволяє управляти 
+користувачами, групами, нагородами та завданнями через RESTful API.
+2 Хід роботи:
+2.1 Розробка UML діаграми прецедентів для серверної частини системи
+Для діаграми прецедентів (Use Case) було визначено два основних 
+актори: користувач та адміністратор. Для прецедентів обрано реєстрацію, 
+авторизацію, а також базові CRUD операції (створення, читання, оновлення, 
+видалення) для наступних сутностей:
+• Користувач (User):
+Реєстрація та вхід у систему (Registration and Login).
+Виконання завдань (Completing Tasks).
+Призначення нагород (Claiming Rewards).
+Перегляд статистики та прогресу (Viewing Statistics and Progress).
+• Адміністратор (Administrator):
+CRUD-операції для користувачів (Manage Users).
+CRUD-операції для груп (Manage Groups).
+CRUD-операції для завдань (Manage Tasks).
+CRUD-операції для нагород (Manage Rewards).
+Перегляд та моніторинг статистики користувачів і програми (Monitor 
+Statistics).
+На основі цих акторів та прецедентів побудовано UML діаграму 
+прецедентів системи (рисунок 2.1).
+Рисунок 2.1 – UML діаграма прецедентів
+2.2 Розробка ER діаграми даних
+Спроектуємо базу даних, для цього розробимо ER діаграму (рисунок 
+2.2). Для діаграми створено такі таблиці: 
+• Users
+• Groups
+• Tasks
+• Rewards
+• UserGroups
+• UserTasks
+• UserRewards
+Рисунок 2.2 – ER діаграма даних
+2.3 Розроблення бази даних програмної системи
+Для створення бази даних використовується MSSQL Server та ASP.NET. 
+Код для створення таблиць винесено в додаток А.
+2.4 Розробка діаграми структури бази даних
+Після створення таблиць в БД, була розроблена діаграма структури бази 
+даних (рисунок 2.3).
+Рисунок 2.3 – Діаграма структури бази даних
+2.5 Розробка функцій для роботи з базою даних
+Для роботи з базою даних було створено моделі бази даних та контекст 
+бази даних з використання Entity Framework.
+Функції авторизації та реєстрації:
+• Реєстрація та вхід у систему для користувачів.
+• Реєстрація та вхід у систему для адміністраторів.
+Функції для роботи із завданнями:
+• Призначення завдань:
+o Призначення завдання конкретному користувачу.
+o Призначення завдання групі.
+• Керування завданнями:
+o Створення нового завдання.
+o Оновлення завдання (назва, опис, дата завершення, кількість 
+балів).
+o Видалення завдання.
+Функції для керування групами:
+• Отримання всіх груп.
+• Отримання групи за ідентифікатором.
+• Створення нової групи.
+• Оновлення назви групи чи максимальної кількості учасників.
+• Видалення групи.
+Функції для роботи з користувачами:
+• Оновлення даних користувача (ім'я, фото профілю, опис профілю).
+• Отримання всіх користувачів у системі.
+• Отримання списку користувачів за ідентифікатором групи.
+Функції для роботи з винагородами:
+• Отримання списку всіх винагород, які отримав користувач.
+• "Отримати" нагороду (підтвердження, що користувач забрав свою 
+нагороду).
+Функції для взаємодії з прогресом користувача:
+• Перегляд прогресу користувача (отримані бали, виконані завдання).
+• Отримання інформації про рівень користувача.
+Функції для адміністраторів:
+• Створення та редагування облікових записів користувачів.
+• Надання ролей та прав доступу.
+• Створення та призначення завдань групам чи окремим користувачам.
+2.7 Створення програмної реалізації розробленого АРІ
+Було створено програмну реалізацію описаних вище функцій API
+(рисунки 2.4 – 2.6)
+Рисунок 2.4 – Програмна реалізація для АРІ
+Рисунок 2.5 – Програмна реалізація для АРІ
+Рисунок 2.6 – Програмна реалізація для АРІ
+2.8 Створення специфікації розробленого АРІ
+Був створений README.MD файл який містить повну розроблену 
+специфікацію API. Через великий вміст файлу його опис можна побачити в 
+GitHub за посиланням (https://github.com/NureHlynskyiVadym/arkpz-pzpi-22-2-hlynskyivadym/blob/main/Task2/arkpz-pzpi-22-2-hlynskyi-vadym-task2/README.md).
+3 Висновки:
+У даній роботі було створено базу даних для серверної частини програмної 
+системи та розроблено прикладний програмний інтерфейс (API) для продукту 
+LevelUp.
+Було виконано такі завдання:
+• Створено UML-діаграму прецедентів, яка відображає взаємодію 
+основних акторів із системою.
+• Розроблено ER-діаграму даних, що визначає структуру бази даних.
+• Реалізовано базу даних за допомогою MSSQL Server та ASP.NET, 
+включно з побудовою діаграми її структури.
+• Створено моделі бази даних та контекст бази даних за допомогою Entity 
+Framework.
+• Розроблено RESTful API для взаємодії серверної частини з клієнтами, 
+що включає всі необхідні функції для роботи системи.
+Реалізація API та його специфікація детально описані, що забезпечує 
+можливість подальшого розвитку програмної системи та її інтеграції з 
+клієнтськими додатками.
+ДОДАТОК А
+Код для створення таблиць в базі даних
+1. USE [master]
+2. GO
+3. 
+4. /****** Object: Database [LevelUpDB] Script Date: 10.01.2025 20:36:10 ******/
+5. CREATE DATABASE [LevelUpDB]
+6. CONTAINMENT = NONE
+7. ON PRIMARY 
+8. ( NAME = N'LevelUpDB', FILENAME = N'C:\Program Files\Microsoft SQL 
+Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\LevelUpDB.mdf' , SIZE = 8192KB , MAXSIZE = 
+UNLIMITED, FILEGROWTH = 65536KB )
+9. LOG ON 
+10. ( NAME = N'LevelUpDB_log', FILENAME = N'C:\Program Files\Microsoft SQL 
+Server\MSSQL16.MSSQLSERVER\MSSQL\DATA\LevelUpDB_log.ldf' , SIZE = 8192KB , 
+MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
+11. WITH CATALOG_COLLATION = DATABASE_DEFAULT, LEDGER = OFF
+12. GO
+13. 
+14. IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+15. begin
+16. EXEC [LevelUpDB].[dbo].[sp_fulltext_database] @action = 'enable'
+17. end
+18. GO
+19. 
+20. ALTER DATABASE [LevelUpDB] SET ANSI_NULL_DEFAULT OFF 
+21. GO
+22. 
+23. ALTER DATABASE [LevelUpDB] SET ANSI_NULLS OFF 
+24. GO
+25. 
+26. ALTER DATABASE [LevelUpDB] SET ANSI_PADDING OFF 
+27. GO
+28. 
+29. ALTER DATABASE [LevelUpDB] SET ANSI_WARNINGS OFF 
+30. GO
+31. 
+32. ALTER DATABASE [LevelUpDB] SET ARITHABORT OFF 
+33. GO
+34. 
+35. ALTER DATABASE [LevelUpDB] SET AUTO_CLOSE OFF 
+36. GO
+37. 
+38. ALTER DATABASE [LevelUpDB] SET AUTO_SHRINK OFF 
+39. GO
+40. 
+41. ALTER DATABASE [LevelUpDB] SET AUTO_UPDATE_STATISTICS ON 
+42. GO
+43. 
+44. ALTER DATABASE [LevelUpDB] SET CURSOR_CLOSE_ON_COMMIT OFF 
+45. GO
+46. 
+47. ALTER DATABASE [LevelUpDB] SET CURSOR_DEFAULT GLOBAL 
+48. GO
+49. 
+50. ALTER DATABASE [LevelUpDB] SET CONCAT_NULL_YIELDS_NULL OFF 
+51. GO
+52. 
+53. ALTER DATABASE [LevelUpDB] SET NUMERIC_ROUNDABORT OFF 
+54. GO
+55. 
+56. ALTER DATABASE [LevelUpDB] SET QUOTED_IDENTIFIER OFF 
+57. GO
+58. 
+59. ALTER DATABASE [LevelUpDB] SET RECURSIVE_TRIGGERS OFF 
+60. GO
+61. 
+62. ALTER DATABASE [LevelUpDB] SET ENABLE_BROKER 
+63. GO
+64. 
+65. ALTER DATABASE [LevelUpDB] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+66. GO
+67. 
+68. ALTER DATABASE [LevelUpDB] SET DATE_CORRELATION_OPTIMIZATION OFF 
+69. GO
+70. 
+71. ALTER DATABASE [LevelUpDB] SET TRUSTWORTHY OFF 
+72. GO
+73. 
+74. ALTER DATABASE [LevelUpDB] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+75. GO
+76. 
+77. ALTER DATABASE [LevelUpDB] SET PARAMETERIZATION SIMPLE 
+78. GO
+79. 
+80. ALTER DATABASE [LevelUpDB] SET READ_COMMITTED_SNAPSHOT ON 
+81. GO
+82. 
+83. ALTER DATABASE [LevelUpDB] SET HONOR_BROKER_PRIORITY OFF 
+84. GO
+85. 
+86. ALTER DATABASE [LevelUpDB] SET RECOVERY FULL 
+87. GO
+88. 
+89. ALTER DATABASE [LevelUpDB] SET MULTI_USER 
+90. GO
+91. 
+92. ALTER DATABASE [LevelUpDB] SET PAGE_VERIFY CHECKSUM 
+93. GO
+94. 
+95. ALTER DATABASE [LevelUpDB] SET DB_CHAINING OFF 
+96. GO
+97. 
+98. ALTER DATABASE [LevelUpDB] SET FILESTREAM( NON_TRANSACTED_ACCESS = OFF ) 
+99. GO
+100. 
+101. ALTER DATABASE [LevelUpDB] SET TARGET_RECOVERY_TIME = 60 SECONDS 
+102. GO
+103. 
+104. ALTER DATABASE [LevelUpDB] SET DELAYED_DURABILITY = DISABLED 
+105. GO
+106. 
+107. ALTER DATABASE [LevelUpDB] SET ACCELERATED_DATABASE_RECOVERY = OFF 
+108. GO
+109. 
+110. ALTER DATABASE [LevelUpDB] SET QUERY_STORE = ON
+111. GO
+112. 
+113. ALTER DATABASE [LevelUpDB] SET QUERY_STORE (OPERATION_MODE = 
+READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), 
+DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, 
+MAX_STORAGE_SIZE_MB = 1000, QUERY_CAPTURE_MODE = AUTO, 
+SIZE_BASED_CLEANUP_MODE = AUTO, MAX_PLANS_PER_QUERY = 200, 
+WAIT_STATS_CAPTURE_MODE = ON)
+114. GO
+115. 
+116. ALTER DATABASE [LevelUpDB] SET READ_WRITE 
+117. GO
+Деякий код для створення моделей бази даних та контексту бази даних 
+1. using LevelUp.Interfaces;
+2. using LevelUp.Models;
+3. using Microsoft.AspNetCore.Mvc;
+4. 
+5. namespace LevelUp.Controllers
+6. {
+7. [ApiController]
+8. [Route("api/[controller]")]
+9. public class RewardsController : ControllerBase
+10. {
+11. private readonly IRewardRepository _rewardRepository;
+12. 
+13. public RewardsController(IRewardRepository rewardRepository)
+14. {
+15. _rewardRepository = rewardRepository;
+16. }
+17. 
+18. [HttpGet]
+19. public IActionResult GetRewards()
+20. {
+21. var rewards = _rewardRepository.GetRewards();
+22. return Ok(new { success = true, data = rewards });
+23. }
+24. 
+25. [HttpGet("{id}")]
+26. public IActionResult GetRewardById(int id)
+27. {
+28. var reward = _rewardRepository.GetRewardById(id);
+29. if (reward == null)
+30. return NotFound(new { success = false, message = $"Reward with ID {id} not 
+found." });
+31. 
+32. return Ok(new { success = true, data = reward });
+33. }
+34. 
+35. [HttpPost]
+36. public IActionResult CreateReward([FromBody] Reward reward)
+37. {
+38. if (reward == null)
+39. return BadRequest(new { success = false, message = "Reward cannot be null" });
+40. 
+41. if (!_rewardRepository.AddReward(reward))
+42. return StatusCode(500, new { success = false, message = "Error creating the 
+reward" });
+43. 
+44. return CreatedAtAction(nameof(GetRewardById), new { id = reward.RewardId }, 
+new { success = true, data = reward });
+45. }
+46. 
+47. [HttpPut("{id}")]
+48. public IActionResult UpdateReward(int id, [FromBody] Reward reward)
+49. {
+50. if (id != reward.RewardId)
+51. return BadRequest(new { success = false, message = "ID mismatch" });
+52. 
+53. var existingReward = _rewardRepository.GetRewardById(id);
+54. if (existingReward == null)
+55. return NotFound(new { success = false, message = $"Reward with ID {id} not 
+found." });
+56. 
+57. if (!_rewardRepository.UpdateReward(reward))
+58. return StatusCode(500, new { success = false, message = "Error updating the 
+reward" });
+59. 
+60. return Ok(new { success = true, data = reward });
+61. }
+62. 
+63. [HttpDelete("{id}")]
+64. public IActionResult DeleteReward(int id)
+65. {
+66. if (!_rewardRepository.DeleteReward(id))
+67. return NotFound(new { success = false, message = $"Reward with ID {id} not 
+found." });
+68. 
+69. return Ok(new { success = true });
+70. }
+71. 
+72. [HttpPost("{rewardId}/claim")]
+73. public IActionResult ClaimReward(int rewardId, [FromBody] int userId)
+74. {
+75. var reward = _rewardRepository.GetRewardById(rewardId);
+76. if (reward == null)
+77. return NotFound(new { success = false, message = $"Reward with ID {rewardId} 
+not found." });
+78. 
+79. var isClaimed = _rewardRepository.ClaimReward(userId, rewardId);
+80. if (!isClaimed)
+81. return BadRequest(new { success = false, message = "Reward could not be claimed, 
+either it was already claimed or an error occurred." });
+82. 
+83. return Ok(new { success = true, message = "Reward successfully claimed!" });
+84. }
+85. 
+86. [HttpGet("user/{userId}")]
+87. public IActionResult GetRewardsByUserId(int userId)
+88. {
+89. var rewards = _rewardRepository.GetRewardsByUserId(userId);
+90. if (rewards == null || !rewards.Any())
+91. return NotFound(new { success = false, message = $"No rewards found for user 
+with ID {userId}." });
+92. 
+93. return Ok(new { success = true, data = rewards });
+94. }
+95. 
+96. 
+97. }
+98. }
+99
